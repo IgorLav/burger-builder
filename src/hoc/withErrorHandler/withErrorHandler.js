@@ -10,14 +10,19 @@ const withErrorHandler = (WrappedComponent) => {
         };
 
         componentWillMount() {
-            axiosInst.interceptors.request.use(req => {
+            this.reqInterceptor = axiosInst.interceptors.request.use(req => {
                 this.setState({ error: null });
                 return req;
             });
 
-            axiosInst.interceptors.response.use(res=> res, err => {
+            this.resInterceptor = axiosInst.interceptors.response.use(res=> res, err => {
                 this.setState({ error: err });
             });
+        }
+
+        componentWillUnmount () {
+            axiosInst.interceptors.request.eject(this.reqInterceptor);
+            axiosInst.interceptors.response.eject(this.resInterceptor);
         }
 
         closeModalHandler = () => {
