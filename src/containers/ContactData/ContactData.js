@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {Component} from 'react';
 import Button from '../../components/UI/Button/Button';
 import classes from './ContactData.css';
 import axiosInst from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
-
-
 import Input from '../../components/UI/Input/Input';
-export default class ContactData extends React.Component {
+
+export default class ContactData extends Component {
     state = {
         orderForm: {
             name: {
@@ -19,7 +18,9 @@ export default class ContactData extends React.Component {
                 label: 'Name',
                 validation: {
                     required: true
-                }
+                },
+                valid: false,
+                touched: false
             },
             email: {
                 elementType: 'input',
@@ -31,7 +32,9 @@ export default class ContactData extends React.Component {
                 label: 'Email',
                 validation: {
                     required: true
-                }
+                },
+                valid: false,
+                touched: false
             },
             street: {
                 elementType: 'input',
@@ -43,7 +46,9 @@ export default class ContactData extends React.Component {
                 label: 'Street',
                 validation: {
                     required: true
-                }
+                },
+                valid: false,
+                touched: false
             },
             zipCode: {
                 elementType: 'input',
@@ -54,8 +59,12 @@ export default class ContactData extends React.Component {
                 value: '',
                 label: 'Zip Code',
                 validation: {
-                    required: true
-                }
+                    required: true,
+                    minLength: 5,
+                    maxLength: 5
+                },
+                valid: false,
+                touched: false
             },
             deliveryMethod: {
                 elementType: 'select',
@@ -71,18 +80,35 @@ export default class ContactData extends React.Component {
                         }
                     ]
                 },
-                value: '',
-                label: 'Delivery'
+                label: 'Delivery',
+                value: 'fastest'
             }
         },
-        name: '',
-        email: '',
-        address: {
-            street: '',
-            postalCode: ''
-        },
-        loading: false
+        loading: false,
+        formIsValid: false
     };
+
+
+    checkValidity (value, rules) {
+        let isValid = true;
+        if(!rules) {
+            return isValid;
+        }
+
+        if(rules.required) {
+            isValid = value.trim() !== '' && isValid;
+        }
+
+        if(rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+        }
+
+        if(rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
+        }
+
+        return isValid;
+    }
 
     orderHandler = (e) => {
         e.preventDefault();
@@ -115,13 +141,26 @@ export default class ContactData extends React.Component {
             ...this.state.orderForm
         };
 
+        const value = e.target.value;
+
         updateFormInfo[id] = {
             ...updateFormInfo[id],
-            value: e.target.value
+            value,
+            valid: this.checkValidity(value, updateFormInfo[id].validation),
+            touched: true
         };
 
+        let formIsValid = true;
+
+        for( let control in updateFormInfo) {
+            if(updateFormInfo[control].validation) {
+                formIsValid = updateFormInfo[control].valid && formIsValid
+            }
+        }
+
         this.setState({
-            orderForm: updateFormInfo
+            orderForm: updateFormInfo,
+            formIsValid
         })
     };
 
@@ -139,9 +178,12 @@ export default class ContactData extends React.Component {
                                                      elementType={item.elementType}
                                                      elementConfig={item.elementConfig}
                                                      value={item.value}
+                                                     invalid={!item.valid}
+                                                     shouldValidate={item.validation}
+                                                     touched={item.touched}
                                                      label={item.label}/>
                 )}
-                <Button btnType="Success">Order</Button>
+                <Button btnType="Success" disabled={!state.formIsValid}>Order</Button>
             </form>
         ) : <Spinner/>;
 
