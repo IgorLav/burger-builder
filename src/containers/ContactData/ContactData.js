@@ -4,8 +4,11 @@ import classes from './ContactData.css';
 import axiosInst from '../../axios-orders';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Input from '../../components/UI/Input/Input';
+import {connect} from 'react-redux';
+import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../store/actions';
 
-export default class ContactData extends Component {
+class ContactData extends Component {
     state = {
         orderForm: {
             name: {
@@ -84,10 +87,8 @@ export default class ContactData extends Component {
                 value: 'fastest'
             }
         },
-        loading: false,
         formIsValid: false
     };
-
 
     checkValidity (value, rules) {
         let isValid = true;
@@ -112,28 +113,14 @@ export default class ContactData extends Component {
 
     orderHandler = (e) => {
         e.preventDefault();
-        this.setState({loading: true});
+
         const orderForm = this.state.orderForm;
         const formData =  Object.keys(orderForm).map(key => ({[key]:this.state.orderForm[key].value}));
-        const order = {
+        this.props.onOrderBurger({
             ingredients: this.props.ingredients,
-            price: this.props.price,
-            customer: formData
-        };
-
-        axiosInst.post('orders.json', order)
-            .then(res => {
-                this.setState({
-                    loading: false,
-                });
-                this.props.history.push('/burger-builder')
-            })
-            .catch(err => {
-                this.setState({
-                    loading: false
-                });
-                console.log(err)
-            });
+            customer: formData,
+            price:  this.props.totalPrice
+        });
     };
 
     inputHandler = (e, id) => {
@@ -171,7 +158,7 @@ export default class ContactData extends Component {
             id: key
         }));
 
-        let form = !this.state.loading ? (
+        let form = !this.props.loading ? (
             <form onSubmit={this.orderHandler}>
                 {formElementArray.map(item => <Input key={item.id}
                                                      inputHandler={(e) => this.inputHandler(e, item.id)}
@@ -195,3 +182,15 @@ export default class ContactData extends Component {
         );
     }
 }
+
+const mapStateToProps = (state) => ({
+    ingredients: state.burgerBuilder.ingredients,
+    totalPrice: state.burgerBuilder.totalPrice,
+    loading: state.order.loading
+});
+
+const mapDispatchToProps = dispatch => ({
+    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData), axiosInst);
