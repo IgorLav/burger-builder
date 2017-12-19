@@ -142,9 +142,7 @@ class ContactData extends Component {
         let form = !this.props.loading ? (
             <form onSubmit={this.orderHandler}>
                 {formElementArray.map(
-                    item => {
-                        console.log(item.id);
-                    return <Input key={item.id}
+                    item =>  <Input key={item.id}
                                    inputHandler={(e) => this.inputHandler(e, item.id)}
                                    elementType={item.elementType}
                                    elementConfig={item.elementConfig}
@@ -152,7 +150,7 @@ class ContactData extends Component {
                                    invalid={!item.valid}
                                    shouldValidate={item.validation}
                                    touched={item.touched}
-                                   label={item.label}/>}
+                                   label={item.label}/>
                 )}
                 <Button btnType="Success" disabled={!state.formIsValid}>Order</Button>
             </form>
