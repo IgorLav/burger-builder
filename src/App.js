@@ -3,13 +3,16 @@ import Layout from './containers/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
 import Checkout from './containers/Checkout/Checkout';
 import {Route, withRouter, Switch} from 'react-router-dom';
-import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Logout/Logout';
 import Home from './components/Home/Home';
 import NoMatch from './components/NoMatch/NoMatch';
 import {connect} from 'react-redux';
 import * as actions from './store/actions';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
+
+const asyncOrders = asyncComponent(() => import ('./containers/Orders/Orders'));
+
 
 class App extends Component {
     componentDidMount() {
@@ -25,7 +28,7 @@ class App extends Component {
         if(this.props.isAuthenticated) {
             routes.push(
                 <Route path="/checkout" component={Checkout} key="checkout"/>,
-                <Route path="/orders" component={Orders} key="orders"/>,
+                <Route path="/orders" component={asyncOrders} key="orders"/>,
                 <Route path="/logout" component={Logout} key="logout"/>
             )
         }
