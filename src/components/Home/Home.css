@@ -1,0 +1,19 @@
+.Page {
+    max-width: 800px;
+    width: 100%;
+    margin: 0 auto 30px;
+    padding: 40px 20px;
+
+    box-shadow: 1px 1px 2px 1px #848484;
+}
+
+.PageHeader {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.burgerImg {
+    display: block;
+    max-width: 320px;
+    margin: 0 auto 30px;
+}

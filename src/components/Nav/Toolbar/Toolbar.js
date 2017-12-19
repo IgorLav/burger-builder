@@ -11,7 +11,7 @@ const toolbar = (props) => {
           <Logo height="80%"/>
 
           <div className={classes.DesktopOnly}>
-            <NavItems />
+            <NavItems isAuthenticated={props.isAuthenticated} />
           </div>
       </header>
     );

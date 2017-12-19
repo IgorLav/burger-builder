@@ -1,12 +1,12 @@
 import * as actionTypes from './actionTypes';
 import axiosInst from '../../axios-orders';
 
-const initialState = {
-  ingredients: null,
-    totalPrice: 4,
-    error: false,
-    loading: false
-};
+// const initialState = {
+//   ingredients: null,
+//     totalPrice: 4,
+//     error: false,
+//     loading: false
+// };
 
 export const addIngredient = (ingredientName) => ({
     type: actionTypes.ADD_INGREDIENT,
@@ -42,3 +42,9 @@ export  const initIngredients = () => {
             })
     );
 };
+
+
+export  const setAuthRedirectPath = (path) => ({
+    type: actionTypes.SET_AUTH_REDIRECT_PATH,
+    path: path
+});

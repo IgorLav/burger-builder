@@ -3,9 +3,9 @@ import Aux from '../../hoc/Auxiliary'
 import classes from './Layout.css';
 import Toolbar from '../../components/Nav/Toolbar/Toolbar'
 import SideDrawer from '../../components/Nav/SideDrawer/SideDrawer';
+import {connect} from 'react-redux';
 
-
-export default class Layout extends Component {
+class Layout extends Component {
     state = {
       showSideDrawer: false
     };
@@ -18,8 +18,10 @@ export default class Layout extends Component {
         const state = this.state;
         return (
             <Aux>
-                <Toolbar navHandler={this.navHandler}/>
-                <SideDrawer showNav={state.showSideDrawer} navHandler={this.navHandler}/>
+                <Toolbar navHandler={this.navHandler} isAuthenticated={this.props.isAuthenticated} />
+                <SideDrawer showNav={state.showSideDrawer}
+                            navHandler={this.navHandler}
+                            isAuthenticated={this.props.isAuthenticated}/>
 
                 <main className={classes.Content}>
                     {this.props.children}
@@ -27,4 +29,10 @@ export default class Layout extends Component {
             </Aux>
         );
     }
-};
+}
+
+const mapStateToProps = state => ({
+    isAuthenticated: state.auth.token !== null
+});
+
+export default connect(mapStateToProps)(Layout);

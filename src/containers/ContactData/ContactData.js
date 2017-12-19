@@ -90,21 +90,21 @@ class ContactData extends Component {
         formIsValid: false
     };
 
-    checkValidity (value, rules) {
+    checkValidity(value, rules) {
         let isValid = true;
-        if(!rules) {
+        if (!rules) {
             return isValid;
         }
 
-        if(rules.required) {
+        if (rules.required) {
             isValid = value.trim() !== '' && isValid;
         }
 
-        if(rules.minLength) {
+        if (rules.minLength) {
             isValid = value.length >= rules.minLength && isValid;
         }
 
-        if(rules.maxLength) {
+        if (rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid;
         }
 
@@ -115,12 +115,13 @@ class ContactData extends Component {
         e.preventDefault();
 
         const orderForm = this.state.orderForm;
-        const formData =  Object.keys(orderForm).map(key => ({[key]:this.state.orderForm[key].value}));
+        const formData = Object.keys(orderForm).map(key => ({[key]: this.state.orderForm[key].value}));
         this.props.onOrderBurger({
             ingredients: this.props.ingredients,
             customer: formData,
-            price:  this.props.totalPrice
-        });
+            price: this.props.totalPrice,
+            userId: this.props.userId
+        }, this.props.token);
     };
 
     inputHandler = (e, id) => {
@@ -139,8 +140,8 @@ class ContactData extends Component {
 
         let formIsValid = true;
 
-        for( let control in updateFormInfo) {
-            if(updateFormInfo[control].validation) {
+        for (let control in updateFormInfo) {
+            if (updateFormInfo[control].validation) {
                 formIsValid = updateFormInfo[control].valid && formIsValid
             }
         }
@@ -160,15 +161,18 @@ class ContactData extends Component {
 
         let form = !this.props.loading ? (
             <form onSubmit={this.orderHandler}>
-                {formElementArray.map(item => <Input key={item.id}
-                                                     inputHandler={(e) => this.inputHandler(e, item.id)}
-                                                     elementType={item.elementType}
-                                                     elementConfig={item.elementConfig}
-                                                     value={item.value}
-                                                     invalid={!item.valid}
-                                                     shouldValidate={item.validation}
-                                                     touched={item.touched}
-                                                     label={item.label}/>
+                {formElementArray.map(
+                    item => {
+                        console.log(item.id);
+                    return <Input key={item.id}
+                                   inputHandler={(e) => this.inputHandler(e, item.id)}
+                                   elementType={item.elementType}
+                                   elementConfig={item.elementConfig}
+                                   value={item.value}
+                                   invalid={!item.valid}
+                                   shouldValidate={item.validation}
+                                   touched={item.touched}
+                                   label={item.label}/>}
                 )}
                 <Button btnType="Success" disabled={!state.formIsValid}>Order</Button>
             </form>
@@ -186,11 +190,13 @@ class ContactData extends Component {
 const mapStateToProps = (state) => ({
     ingredients: state.burgerBuilder.ingredients,
     totalPrice: state.burgerBuilder.totalPrice,
-    loading: state.order.loading
+    loading: state.order.loading,
+    token: state.auth.token,
+    userId: state.auth.userId
 });
 
 const mapDispatchToProps = dispatch => ({
-    onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+    onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData), axiosInst);
