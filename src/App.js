@@ -16,7 +16,6 @@ class App extends Component {
         this.props.onTryAutoSignup();
     }
 
-
     render() {
         const routes = [
             <Route path="/" component={Home} exact key="Home"/>,
