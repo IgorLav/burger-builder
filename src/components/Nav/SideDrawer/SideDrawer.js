@@ -7,6 +7,7 @@ import Backdrop from '../../UI/Backdrop/Backdrop';
 
 const sideDrawer = (props) => {
     const attachedClasses = [classes.SideDrawer, props.showNav ? classes.Open : null];
+
     return (
         <Aux>
             <Backdrop show={props.showNav} close={props.navHandler} />
@@ -15,7 +16,7 @@ const sideDrawer = (props) => {
                 <div className={classes.Logo}>
                     <Logo/>
                 </div>
-                <NavItems isAuthenticated={props.isAuthenticated}/>
+                <NavItems isAuthenticated={props.isAuthenticated} closeNav={props.navHandler}/>
             </div>
         </Aux>
     )
