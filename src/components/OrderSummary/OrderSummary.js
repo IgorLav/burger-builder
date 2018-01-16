@@ -1,5 +1,4 @@
 import React from 'react';
-import Aux from '../../hoc/Auxiliary';
 import Button  from '../UI/Button/Button';
 
 const orderSummary = (props) => {
@@ -11,7 +10,7 @@ const orderSummary = (props) => {
         ));
 
     return (
-        <Aux>
+        <React.Fragment>
             <h3>Your order</h3>
             <p>A delicious burger with a following ingredients:</p>
             <ul>
@@ -22,7 +21,7 @@ const orderSummary = (props) => {
 
             <Button clicked={props.closePurchase} btnType="Danger">Cancel</Button>
             <Button clicked={props.continuePurchase} btnType="Success">Continue</Button>
-        </Aux>
+        </React.Fragment>
     )
 };
 

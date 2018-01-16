@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import Aux from '../../hoc/Auxiliary'
 import classes from './Layout.css';
 import Toolbar from '../../components/Nav/Toolbar/Toolbar'
 import SideDrawer from '../../components/Nav/SideDrawer/SideDrawer';
@@ -17,7 +16,7 @@ class Layout extends Component {
     render() {
         const state = this.state;
         return (
-            <Aux>
+            <React.Fragment>
                 <Toolbar navHandler={this.navHandler} isAuthenticated={this.props.isAuthenticated} />
                 <SideDrawer showNav={state.showSideDrawer}
                             navHandler={this.navHandler}
@@ -26,7 +25,7 @@ class Layout extends Component {
                 <main className={classes.Content}>
                     {this.props.children}
                 </main>
-            </Aux>
+            </React.Fragment>
         );
     }
 }

@@ -13,7 +13,6 @@ import asyncComponent from './hoc/asyncComponent/asyncComponent';
 
 const asyncOrders = asyncComponent(() => import ('./containers/Orders/Orders'));
 
-
 class App extends Component {
     componentDidMount() {
         this.props.onTryAutoSignup();
